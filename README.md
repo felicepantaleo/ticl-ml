@@ -27,6 +27,13 @@ The models are the defaults of TICLv6 on the branch `ticlv6-modifier` of felicep
 | e/gamma supercluster energy regression | `ParticleFlow/data/egammaSuperClusters/regression_v3.onnx` | 814834fc | `egammaSuperClusters/regression/` | 2026-10-22 |
 | hadronic trackster calibration (quantiles) | `Interpretation/data/chargedEnergy/hadronicTracksterCalibration_v1.onnx` | b3daba33 | `chargedEnergy/` | 2026-10-14 |
 
+With `--procModifiers ticl_v6,ticl_v6_heterogeneous`, two models run on the device with PyTorch (TorchScript files, branch `hgcalOnly-workflow` 5a3ff681d99). They are exports of ONNX models, with no new training (`heterogeneous/`):
+
+| model | CMSSW path (`RecoTICL/...`) | md5 | export of |
+|---|---|---|---|
+| device mixture PID, CLUEstering tracksters | `Inference/data/showerShapePID/mixPID_hi_v2.pt` | 14aac6c2 | `mixPID_hi_v2.onnx` |
+| device superclustering DNN | `Superclustering/data/supercls_v3.pt` | 04ee12c5 | `RecoHGCal/TICL/data/superclustering/supercls_v3.onnx` (TICLv5 model, cms-data) |
+
 Run rt3p2 is the retrain of 2026-11-06/07 on the tracksters of the tune point p2 (`common/harness/p2.py`). The md5 of
 each output of that run is equal to the md5 of the deployed file.
 
@@ -48,23 +55,47 @@ byte-identical to the deployed file (checked 2026-11-10):
 | `egammaSuperClusters/score_type/` | supercluster score and type score |
 | `egammaSuperClusters/regression/` | supercluster energy regression |
 | `chargedEnergy/` | hadronic trackster calibration |
+| `heterogeneous/` | TorchScript models of the device inference, the export script, the parity check |
 | `models/` | the deployed ONNX files |
 
 Every folder has a README with the inputs, the steps, the commands and the outputs.
 
 ## Samples
 
-All samples are Phase-2 D127 at PU200 (era `Phase2C26I13M9`, pile-up library RelValMinBias_14TeV D127 with 900,000
-events). A chain has 50 events. The MC-truth graph (`truth::Graph`) is built at DIGI and gives the labels.
+All samples are Phase-2 D127 (era `Phase2C26I13M9`, geometry `ExtendedRun4D127`, conditions
+`auto:phase2_realistic_T35`, beam spot `DBrealisticHLLHC`) at PU200. GEN-SIM runs with `--procModifiers enableTruth`.
+The MC-truth graph (`truth::Graph`) is built at DIGI and gives the labels. A chain has 50 events.
 
-| sample | kind | DIGI production | chains in run rt3p2 |
-|---|---|---|---|
-| TenTau, E 15-500 GeV, abs(eta) < 3.1 | `tt` | c1 (`ticlv6prod/tt`) | dumps 862, probes 32 |
-| e/gamma guns | `eg` | c1 and c2 (`ticlv6prod/eg`, `ticlv6prod_c2/eg`) | dumps 236, probes 16, supercluster legs 68 |
-| QCD | `qcd` | c2 (`ticlv6prod_c2/qcd`) | dumps 252, probes 16 |
-| QCD, high pT-hat | `qcdhi` | c3 (`ticlv6prod_c3/qcdhi`) | dumps 64, probes 32 |
+### Samples and runTheMatrix workflows
 
-The supercluster legs also use 80 TenTau chains (1, 6, ..., 196 and 3, 8, ..., 198).
+The workflow is the runTheMatrix upgrade workflow (`runTheMatrix.py -w upgrade`, CMSSW_20_1_X) with the same generator
+fragment. The `.88` variant has `enableTruth` at GEN-SIM, as these samples. The chains are a private production of the
+same configuration, with the differences in the last column.
+
+| sample | kind | GEN fragment | workflow | differences from the workflow |
+|---|---|---|---|---|
+| TenTau | `tt` | `TenTau_E15to500_Eta3p1_pythia8_cfi` | 37887.88 (PU200), 37687.88 (no PU) | private pile-up library (below); truth preset `applyTruthPreset(fragment="TenTau_E15to500_Eta3p1_pythia8_cfi", keepStableSpectators=True)` at DIGI and RECO |
+| e/gamma guns | `eg` | `Pythia8PtGun`: e+e- and gamma gamma pairs, 1 < pT < 60 GeV, 1.6 < abs(eta) < 2.9, from the vertex | none (private gun) | truth preset `preset="gun", seedPdgIds=[11, -11, 22], keepStableSpectators=True` at DIGI (the c2 DIGI, which the dumps and probes read); the supercluster legs read the c1 DIGI of chains 0-99, which has the full graph |
+| QCD | `qcd` | `QCD_Pt15To7000_Flat_14TeV_TuneCP5_cff` | 37851.88 (PU200), 37651.88 (no PU) | private pile-up library; truth preset `preset="full", seedPdgIds=[2212], seedParentDepth=0, keepStableSpectators=True` at DIGI |
+| QCD, high pT-hat | `qcdhi` | `QCD_Pt15To7000_Flat_14TeV_TuneCP5_cff` with `PhaseSpace:pTHatMin 150`, `pTHatMax 1000`, `bias2Selection on`, `bias2SelectionPow 6`, `bias2SelectionRef 150` | 37851.88 with these generator settings | as QCD |
+| pile-up library (c1) | `mb` | `MinBias_14TeV_pythia8_TuneCP5_cfi` | GEN-SIM step of 37640.88 (the PU input of 378xx) | private: 440 files of 250 events; files 0-319 (80,000 events) mix the training chains, files 320-439 the validation chains (chain % 5 == 4) |
+| photon guns (regression only) | - | `SingleGammaE50_cfi` changed to two photons per event, 1.6 < abs(eta) < 2.8, E 20-500 GeV (PU200, PU0) and 400-1200 GeV (PU0) | none (private gun) | PU200 with half of the RelVal library `RelValMinBias_14TeV` D127 of CMSSW_20_0_0 (48 of its 95 files, the odd lines of the list) |
+
+### Chains per model
+
+| model | sample chains |
+|---|---|
+| mixture PIDs | probes: TenTau 200-238 (32, chain % 5 != 4), e/gamma 100-115, QCD 40-55, high-pT QCD 0-38 (32, chain % 5 != 4) |
+| hypothesis, species | dumps: TenTau 862 of chains 0-1127, e/gamma 236 (64-299) |
+| neutral share | dumps: TenTau 862, QCD 252 (24-299 without 100-123), high-pT QCD 64 (0-78) |
+| supercluster score | e/gamma 0-31, 64-99 |
+| supercluster type score | e/gamma 0-31, 64-99, TenTau 1, 6, ..., 196 and 3, 8, ..., 198 |
+| energy regression | photon guns: PU200 files 100, 101, 102, 104; PU0 3000 events; high energy 500 events |
+| hadronic calibration | TenTau 200-248 (40), QCD 24-55 (32) |
+
+The productions: c1 = `ticlv6prod` (TenTau, e/gamma 0-99, the pile-up library), c2 = `ticlv6prod_c2` (e/gamma 100-299,
+QCD), c3 = `ticlv6prod_c3` (high-pT QCD). The DIGI of the e/gamma chains 0-99 is in c2 too, from the c1 GEN-SIM. The
+code of c1, c2 and c3 is `ticlv6-modifier` e6008d0379b in CMSSW_20_1_X_2026-10-04-0000.
 
 No training reads the validation chains of the TICLv6 A/B set: TenTau 2, 7, ..., 197, e/gamma 32-63, QCD 100-123.
 The splits are by chain id, so all rows of one event are in one split. Each README gives the split of its model.
