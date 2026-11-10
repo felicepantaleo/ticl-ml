@@ -1,0 +1,13 @@
+train eg 65378 (signal 10811), tt 43100 (signal 5077); val eg 11175, tt 43426
+[0]	val-logloss:0.65009
+[200]	val-logloss:0.08945
+[400]	val-logloss:0.08729
+[600]	val-logloss:0.08693
+[697]	val-logloss:0.08710
+  eg val: signal eff 0.98: cut 0.037, pile-up superclusters kept 0.1077
+  eg val: signal eff 0.95: cut 0.226, pile-up superclusters kept 0.0225
+  eg val: signal eff 0.9: cut 0.817, pile-up superclusters kept 0.0017
+  tt val: signal eff 0.98: cut 0.009, pile-up superclusters kept 0.2631
+  tt val: signal eff 0.95: cut 0.031, pile-up superclusters kept 0.1223
+  tt val: signal eff 0.9: cut 0.098, pile-up superclusters kept 0.0485
+gain f27:330, f23:103, f22:73, f21:56, f31:42, f33:22, f28:20, f29:17, f2:13, f30:10, f34:9, f19:9

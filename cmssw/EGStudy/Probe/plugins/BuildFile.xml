@@ -1,0 +1,23 @@
+<use name="CommonTools/UtilAlgos"/>
+<use name="DataFormats/CaloRecHit"/>
+<use name="DataFormats/DetId"/>
+<use name="DataFormats/EgammaCandidates"/>
+<use name="DataFormats/EgammaReco"/>
+<use name="DataFormats/GsfTrackReco"/>
+<use name="DataFormats/HGCalReco"/>
+<use name="DataFormats/HGCRecHit"/>
+<use name="DataFormats/HepMCCandidate"/>
+<use name="DataFormats/Math"/>
+<use name="DataFormats/TrackReco"/>
+<use name="FWCore/Framework"/>
+<use name="FWCore/ParameterSet"/>
+<use name="FWCore/ServiceRegistry"/>
+<use name="FWCore/Utilities"/>
+<use name="Geometry/Records"/>
+<use name="RecoLocalCalo/HGCalRecAlgos"/>
+<use name="RecoTICL/ParticleFlow"/>
+<use name="SimDataFormats/TruthInfo"/>
+<use name="root"/>
+<library file="*.cc" name="EGStudyProbePlugins">
+  <flags EDM_PLUGIN="1"/>
+</library>

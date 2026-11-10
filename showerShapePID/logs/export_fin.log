@@ -1,0 +1,27 @@
+bin 1-2 GeV: 236696 train hadrons, centre 1.5 GeV, knots 201
+bin 2-3 GeV: 217667 train hadrons, centre 2.5 GeV, knots 201
+bin 3-5 GeV: 412838 train hadrons, centre 4.0 GeV, knots 201
+bin 5-7 GeV: 384243 train hadrons, centre 6.0 GeV, knots 201
+bin 7-10 GeV: 447663 train hadrons, centre 8.3 GeV, knots 201
+bin 10-15 GeV: 369194 train hadrons, centre 11.9 GeV, knots 201
+bin 15-20 GeV: 158947 train hadrons, centre 17.0 GeV, knots 201
+bin 20-30 GeV: 116568 train hadrons, centre 23.4 GeV, knots 201
+bin 30-50 GeV: 38222 train hadrons, centre 34.9 GeV, knots 201
+bin 50-100 GeV: 7635 train hadrons, centre 62.1 GeV, knots 201
+bin 100-1e+09 GeV: 2732 train hadrons, centre 155.4 GeV, knots 201
+validation: hadron mis-ID and EM efficiency (truth EM fraction >= 0.5) per bin, CNN / mapped mixture
+  E   1-2     had   78099 EM   38681 | t0.3: 0.133/0.132 eff 0.72/0.79 | t0.5: 0.051/0.051 eff 0.54/0.66 | t0.7: 0.000/0.001 eff 0.01/0.07 |
+  E   2-3     had   72289 EM   47666 | t0.3: 0.128/0.125 eff 0.82/0.87 | t0.5: 0.061/0.061 eff 0.68/0.78 | t0.7: 0.002/0.002 eff 0.04/0.12 |
+  E   3-5     had  136834 EM   78638 | t0.3: 0.110/0.109 eff 0.74/0.83 | t0.5: 0.052/0.053 eff 0.57/0.71 | t0.7: 0.002/0.002 eff 0.04/0.11 |
+  E   5-7     had  127251 EM   75277 | t0.3: 0.119/0.120 eff 0.68/0.80 | t0.5: 0.057/0.057 eff 0.47/0.64 | t0.7: 0.002/0.002 eff 0.03/0.08 |
+  E   7-10    had  148876 EM   85122 | t0.3: 0.119/0.117 eff 0.63/0.77 | t0.5: 0.056/0.054 eff 0.39/0.58 | t0.7: 0.002/0.002 eff 0.02/0.05 |
+  E  10-15    had  122743 EM   81538 | t0.3: 0.112/0.113 eff 0.53/0.70 | t0.5: 0.047/0.045 eff 0.29/0.48 | t0.7: 0.001/0.001 eff 0.01/0.03 |
+  E  15-20    had   52630 EM   41765 | t0.3: 0.107/0.105 eff 0.46/0.64 | t0.5: 0.042/0.040 eff 0.24/0.41 | t0.7: 0.001/0.001 eff 0.01/0.02 |
+  E  20-30    had   38661 EM   37958 | t0.3: 0.089/0.080 eff 0.39/0.55 | t0.5: 0.035/0.029 eff 0.20/0.31 | t0.7: 0.001/0.001 eff 0.02/0.02 |
+  E  30-50    had   12767 EM   17034 | t0.3: 0.055/0.055 eff 0.30/0.45 | t0.5: 0.023/0.019 eff 0.16/0.23 | t0.7: 0.002/0.002 eff 0.02/0.02 |
+  E  50-100   had    2579 EM    3568 | t0.3: 0.031/0.045 eff 0.30/0.42 | t0.5: 0.018/0.028 eff 0.20/0.28 | t0.7: 0.007/0.009 eff 0.08/0.12 |
+  E 100-1e+09 had     921 EM    1253 | t0.3: 0.043/0.049 eff 0.58/0.77 | t0.5: 0.036/0.042 eff 0.54/0.72 | t0.7: 0.025/0.038 eff 0.45/0.68 |
+/cms-hlt-nfs/user/fpantale/ticlv6tune/rt3/lib/pidstudy/mix/export_mix.py:121: DeprecationWarning: You are using the legacy TorchScript-based ONNX export. Starting in PyTorch 2.9, the new torch.export-based ONNX exporter has become the default. Learn more about the new export logic: https://docs.pytorch.org/docs/stable/onnx_export.html. For exporting control flow: https://pytorch.org/tutorials/beginner/onnx/export_control_flow_model_to_onnx_tutorial.html
+  torch.onnx.export(model, torch.tensor(Xraw[:4]), stem + "_mapped.onnx", input_names=["input"], output_names=["pid"],
+torch mapped EM sum vs numpy map: max diff 9.28e-07; slot sum max |1 - sum| 1.07e-06
+onnx parity 1.07e-06

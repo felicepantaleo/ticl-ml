@@ -1,0 +1,33 @@
+/data/fpantale/ticlv6retrain/calib/train_hadcal.py:118: RuntimeWarning: invalid value encountered in log
+  y = np.log(true_sum / g["regE"]).astype(np.float32)
+/data/fpantale/ticlv6retrain/calib/train_hadcal.py:217: DeprecationWarning: You are using the legacy TorchScript-based ONNX export. Starting in PyTorch 2.9, the new torch.export-based ONNX exporter has become the default. Learn more about the new export logic: https://docs.pytorch.org/docs/stable/onnx_export.html. For exporting control flow: https://pytorch.org/tutorials/beginner/onnx/export_control_flow_model_to_onnx_tutorial.html
+  torch.onnx.export(net, torch.tensor(X[:4]), out, input_names=["input"], output_names=["quantiles"],
+groups 342911, hadronic 342911, all tracks matched (purity >= 0.5) 321181; train 240396 val 80785 (72 chains, 18 val)
+epochs 198, best val pinball 0.24324
+val coverage of [q16, q84]: 0.677 (0.68 expected); median of t/q50: 0.998
+  regE 0-5: n 8095  median t 3.171  median q50 2.988  rel width (q84-q16)/2q50 0.340  coverage 0.675
+  regE 5-10: n 14911  median t 1.147  median q50 1.095  rel width (q84-q16)/2q50 0.333  coverage 0.675
+  regE 10-20: n 30207  median t 1.180  median q50 1.098  rel width (q84-q16)/2q50 0.238  coverage 0.676
+  regE 20-50: n 21907  median t 0.871  median q50 0.829  rel width (q84-q16)/2q50 0.232  coverage 0.681
+  regE 50-1000000000.0: n 5665  median t 0.658  median q50 0.624  rel width (q84-q16)/2q50 0.238  coverage 0.674
+emulation on the val tracks: median and sigma68/median of E/E_true by true energy
+  E_true 0-5: n 22156 | track: 0.9991 0.0183 | average 2.32/sqrtE: 0.9990 0.0183 | calibrated average: 0.9995 0.0183
+  E_true 5-10: n 79162 | track: 0.9997 0.0273 | average 2.32/sqrtE: 0.9996 0.0273 | calibrated average: 0.9998 0.0275
+  E_true 10-20: n 50485 | track: 0.9988 0.0376 | average 2.32/sqrtE: 0.9982 0.0384 | calibrated average: 0.9954 0.0385
+  E_true 20-50: n 10829 | track: 0.9980 0.0398 | average 2.32/sqrtE: 0.9955 0.0432 | calibrated average: 0.9829 0.0495
+  E_true 50-1000000000.0: n 2186 | track: 0.9959 0.0408 | average 2.32/sqrtE: 0.9893 0.0614 | calibrated average: 0.9920 0.0563
+variants, single-track groups: track alone 0.9995 0.0185 tails>10% 0.0163
+  track error scale 1.0, compatibility 1.0 sigma: 0.9995 0.0185 tails>10% 0.0164
+  track error scale 1.0, compatibility 2.0 sigma: 0.9994 0.0185 tails>10% 0.0162
+  track error scale 1.0, compatibility 3.0 sigma: 0.9992 0.0184 tails>10% 0.0162
+  track error scale 2.0, compatibility 1.0 sigma: 0.9995 0.0186 tails>10% 0.0171
+  track error scale 2.0, compatibility 2.0 sigma: 0.9988 0.0188 tails>10% 0.0190
+  track error scale 2.0, compatibility 3.0 sigma: 0.9982 0.0190 tails>10% 0.0217
+variants, multi-track groups: track alone 0.9991 0.0319 tails>10% 0.0481
+  track error scale 1.0, compatibility 1.0 sigma: 0.9991 0.0319 tails>10% 0.0482
+  track error scale 1.0, compatibility 2.0 sigma: 0.9989 0.0319 tails>10% 0.0481
+  track error scale 1.0, compatibility 3.0 sigma: 0.9987 0.0320 tails>10% 0.0484
+  track error scale 2.0, compatibility 1.0 sigma: 0.9992 0.0321 tails>10% 0.0490
+  track error scale 2.0, compatibility 2.0 sigma: 0.9984 0.0326 tails>10% 0.0516
+  track error scale 2.0, compatibility 3.0 sigma: 0.9977 0.0329 tails>10% 0.0546
+onnx parity: max |onnx - torch| 1.14e-05; features ['log regE', 'log rawE', 'emFrac', 'absEta', 'log1p nLC', 'sigPCA0', 'sigPCA1', 'sigPCA2', 'nTracks', 'nJetMembers']

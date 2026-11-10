@@ -1,0 +1,8 @@
+train rows 64351 (signal 10811), chains 58; val rows 11003 (signal 1894), chains 10
+[0]	train-logloss:0.64817	val-logloss:0.64821
+[200]	train-logloss:0.04254	val-logloss:0.05653
+[400]	train-logloss:0.03028	val-logloss:0.05519
+[474]	train-logloss:0.02670	val-logloss:0.05524
+best iteration 376, val logloss 0.0551
+gain f27:474, f23:213, f22:59, f21:50, f31:40, f2:18, f28:14, f29:12, f33:11, f30:9, f34:8, f4:8, f1:8, f5:7, f0:7
+written /cms-hlt-nfs/user/fpantale/ticlv6tune/rt3/rt3p2/models/sc/score/score.onnx

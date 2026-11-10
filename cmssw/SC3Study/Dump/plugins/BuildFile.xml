@@ -1,0 +1,18 @@
+<use name="CommonTools/UtilAlgos"/>
+<use name="DataFormats/Common"/>
+<use name="DataFormats/EgammaReco"/>
+<use name="DataFormats/HGCRecHit"/>
+<use name="DataFormats/HGCalReco"/>
+<use name="DataFormats/HepMCCandidate"/>
+<use name="DataFormats/Math"/>
+<use name="FWCore/Framework"/>
+<use name="FWCore/ParameterSet"/>
+<use name="FWCore/ServiceRegistry"/>
+<use name="FWCore/Utilities"/>
+<use name="Geometry/Records"/>
+<use name="RecoLocalCalo/HGCalRecAlgos"/>
+<use name="RecoTICL/ParticleFlow"/>
+<use name="root"/>
+<library file="*.cc" name="SC3StudyDumpPlugins">
+  <flags EDM_PLUGIN="1"/>
+</library>

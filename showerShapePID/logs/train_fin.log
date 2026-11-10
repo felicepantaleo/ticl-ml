@@ -1,0 +1,23 @@
+fin: 96 chains, rows 5705002, train 3928687, val 1302150; train rows per bin 353032 361596 651652 612452 704980 614458 285083 230092 90261 18588 6493
+/cvmfs/cms-ib.cern.ch/sw/x86_64/nweek-02966/el8_amd64_gcc14/external/py3-torch-cuda/2.14.1-c96d2b1ff3104e164ae37158a266bb57/lib/python3.12/site-packages/torch/nn/modules/linear.py:134: UserWarning: Requested unified CUBLASLT workspace size of 1048576 bytes exceeds CUBLAS workspace size of 131072 bytes. Please increase CUBLAS workspace size via CUBLAS_WORKSPACE_CONFIG or decrease requested CUBLASLT_WORKSPACE_SIZE. Otherwise CUBLASLT workspace size will be limited to the CUBLAS workspace size. (Triggered internally at /data/cmsbld/jenkins/workspace/build-any-ib/w/BUILD/el8_amd64_gcc14/external/py3-torch-cuda/2.14.1-c96d2b1ff3104e164ae37158a266bb57/cmsdist-pip-src/torch-2.14.1/aten/src/ATen/cuda/CublasHandlePool.cpp:294.)
+  return F.linear(input, self.weight, self.bias)
+epochs 35, best val soft cross entropy 1.06333
+validation per raw-energy bin: energy-weighted mean |EM fraction error| and, EM = truth EM fraction >= 0.5, EM efficiency at the CNN hadron mis-ID of each threshold (scores mapped by hadron quantiles in the bin)
+  E   1-2     n  116780 EM  38681 | CNN 0.216 0.72/0.55/0.01 | mix 0.136 0.80/0.66/0.08 | shape v1 0.196 0.75/0.63/0.07 | shape emap 0.188 0.75/0.63/0.07 |
+  E   2-3     n  119955 EM  47666 | CNN 0.206 0.82/0.68/0.05 | mix 0.118 0.87/0.79/0.17 | shape v1 0.178 0.84/0.75/0.17 | shape emap 0.182 0.84/0.75/0.18 |
+  E   3-5     n  215472 EM  78638 | CNN 0.201 0.75/0.58/0.05 | mix 0.111 0.83/0.72/0.14 | shape v1 0.186 0.76/0.63/0.14 | shape emap 0.186 0.76/0.63/0.14 |
+  E   5-7     n  202528 EM  75277 | CNN 0.200 0.69/0.48/0.04 | mix 0.103 0.81/0.65/0.10 | shape v1 0.188 0.68/0.51/0.09 | shape emap 0.197 0.68/0.51/0.09 |
+  E   7-10    n  233998 EM  85122 | CNN 0.198 0.63/0.40/0.03 | mix 0.090 0.78/0.60/0.06 | shape v1 0.183 0.62/0.45/0.06 | shape emap 0.210 0.62/0.45/0.06 |
+  E  10-15    n  204281 EM  81538 | CNN 0.231 0.53/0.30/0.02 | mix 0.089 0.70/0.50/0.04 | shape v1 0.200 0.54/0.35/0.04 | shape emap 0.252 0.54/0.34/0.04 |
+  E  15-20    n   94395 EM  41765 | CNN 0.264 0.47/0.24/0.01 | mix 0.089 0.65/0.43/0.03 | shape v1 0.212 0.49/0.30/0.04 | shape emap 0.295 0.48/0.30/0.04 |
+  E  20-30    n   76619 EM  37958 | CNN 0.303 0.40/0.20/0.02 | mix 0.087 0.58/0.37/0.02 | shape v1 0.206 0.42/0.26/0.03 | shape emap 0.324 0.42/0.26/0.03 |
+  E  30-50    n   29801 EM  17034 | CNN 0.348 0.31/0.17/0.03 | mix 0.087 0.46/0.26/0.03 | shape v1 0.175 0.33/0.20/0.02 | shape emap 0.320 0.33/0.20/0.02 |
+  E  50-100   n    6147 EM   3568 | CNN 0.359 0.31/0.20/0.08 | mix 0.093 0.32/0.23/0.09 | shape v1 0.169 0.28/0.19/0.08 | shape emap 0.313 0.28/0.19/0.08 |
+  E 100-1e+09 n    2174 EM   1253 | CNN 0.251 0.59/0.54/0.46 | mix 0.097 0.74/0.69/0.63 | shape v1 0.164 0.59/0.57/0.49 | shape emap 0.250 0.58/0.56/0.47 |
+  all, energy-weighted |EM fraction error| CNN: 0.2499
+  all, energy-weighted |EM fraction error| mix: 0.0934
+  all, energy-weighted |EM fraction error| shape v1: 0.1922
+  all, energy-weighted |EM fraction error| shape emap: 0.2570
+/cms-hlt-nfs/user/fpantale/ticlv6tune/rt3/lib/pidstudy/mix/train_mix.py:197: DeprecationWarning: You are using the legacy TorchScript-based ONNX export. Starting in PyTorch 2.9, the new torch.export-based ONNX exporter has become the default. Learn more about the new export logic: https://docs.pytorch.org/docs/stable/onnx_export.html. For exporting control flow: https://pytorch.org/tutorials/beginner/onnx/export_control_flow_model_to_onnx_tutorial.html
+  torch.onnx.export(net, torch.tensor(X[:4]), out + ".onnx", input_names=["input"], output_names=["fractions"],
+onnx parity 5.36e-07
