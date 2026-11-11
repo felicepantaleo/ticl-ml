@@ -20,7 +20,8 @@ case "${STEP:?STEP}" in
     done
     P=$AREA/src/RecoTICL/Inference/data/showerShapePID
     for l in hi fin; do
-      cp $D/models/mix/mixPID_${l}_${TAG}_mapped.onnx $P/.mixPID_${l}_$TAG.onnx.tmp && mv $P/.mixPID_${l}_$TAG.onnx.tmp $P/mixPID_${l}_$TAG.onnx || exit 1
+      # A temporary name per pool: several pools on one area install the same file at the same time.
+      cp $D/models/mix/mixPID_${l}_${TAG}_mapped.onnx $P/.mixPID_${l}_$TAG.onnx.$$ && mv $P/.mixPID_${l}_$TAG.onnx.$$ $P/mixPID_${l}_$TAG.onnx || exit 1
     done
     ( cd $P && md5sum mixPID_hi_$TAG.onnx mixPID_fin_$TAG.onnx )
     OUTROOT=$D/dumps BLOCK=$W/blocks/m6s_$POINT.py exec bash $X/common/pool3.sh $D/queue_${TAG}_dumps.txt "$@" ;;

@@ -47,7 +47,7 @@ nthr=$(echo "$cpus" | awk -F'[-,]' '{print ($2 == "" ? 1 : $2 - $1 + 1)}')
 process.source.fileNames = cms.untracked.vstring("file:$W/step2.root")
 process.maxEvents.input = ${NEV:-50}
 process.options.numberOfThreads = $nthr
-process.options.numberOfStreams = $nthr
+process.options.numberOfStreams = $(( nthr > 1 ? nthr / 2 : 1 ))
 process.options.wantSummary = True
 process.schedule.remove(process.AODSIMoutput_step)
 del process.AODSIMoutput_step, process.AODSIMoutput

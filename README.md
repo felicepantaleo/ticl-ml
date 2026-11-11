@@ -132,8 +132,11 @@ data paths from environment variables or arguments.
 1. `common/setup_tag.sh`: blocks, queues and folders of one run.
 2. Probe chains, then the mixture PIDs (`showerShapePID/`).
 3. Dump chains with the new mixture PIDs, then the interpretation models (`interpretation/`).
-4. Supercluster legs with all new models, then the score and type models (`egammaSuperClusters/score_type/`).
+4. Supercluster legs with all new models, then the score and type models (`egammaSuperClusters/score_type/`) and,
+   with `SC_REF`, the score cuts at the fake count of the old model.
    `common/rest.sh` runs step 4, installs the models and runs the validation leg.
+
+In a GPU pod of the NGT cluster, `common/pod_start.sh` runs steps 2 and 3 (pools and training) in cmssw-el8.
 
 Each step waits for the end marker of the step before it, so all steps can start at once. See `common/README.md`.
 

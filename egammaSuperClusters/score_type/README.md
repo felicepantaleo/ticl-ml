@@ -43,3 +43,13 @@ Both are xgboost models on the 35 score features (`scoreFeatures` of
 `logs/`: `score.log` (train 64351 rows in 58 chains, validation 11003 rows in 10 chains, best iteration 376,
 validation logloss 0.0551), `type.log` (pile-up superclusters kept at a signal efficiency of 0.98 / 0.95 / 0.90:
 0.263 / 0.122 / 0.049 on TenTau validation), `meta.json`.
+
+## Score cuts at equal fake rate
+
+A new score model has a different calibration, so the cuts of the old model do not give the same operating point.
+`equal_fake_cuts.py` gives the cuts of the new model that keep the number of fake superclusters of a reference model at
+its cuts, in raw Et 2-10 GeV and at or above 10 GeV, on the validation chains 90-99 of the supercluster legs. With the
+reference score_v1 at 0.5 and 0.9, the rt3p2 score model gives 0.335 and 0.850 (68 and 7 fakes, as score_v1); the
+defaults 0.35 and 0.85 come from the same scan with steps of 0.05. `common/rest.sh` runs it when `SC_REF` is set.
+
+    python3 equal_fake_cuts.py <RUNDIR>/<TAG>/sc/legs/eg sc_<TAG> <reference onnx> <cut below 10 GeV> <cut at or above 10 GeV> <new onnx>

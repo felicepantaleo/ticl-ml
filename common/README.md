@@ -16,8 +16,9 @@ A run is one tune point (`POINT`) and one tag (`TAG`). Run rt3p2 is `POINT=p2 TA
 | `pool3.sh` | workers that claim queue lines with an atomic `mkdir`; a `STOP` file next to the queue stops new claims |
 | `job3.sh` | one chain: copies the DIGI to local disk, writes the RECO job (`cfg/reco_v6.py`, the chain's DIGI, the truth preset of TenTau, the block), runs 50 events, writes `done` or `failed` |
 | `install_models.sh` | copies the interpretation models of a run into the CMSSW area under the names of `blocks/models_<TAG>.py` |
-| `rest.sh` | after the interpretation training: installs the models, runs the 148 supercluster legs, trains the score and type models, writes `blocks/models_sc_<TAG>.py`, runs the validation leg |
+| `rest.sh` | after the interpretation training: installs the models, runs the 148 supercluster legs, trains the score and type models, writes `blocks/models_sc_<TAG>.py` (with `SC_REF`, also the score cuts at the fake count of the reference model, `egammaSuperClusters/score_type/equal_fake_cuts.py`), runs the validation leg |
 | `ticl_leg.sh` | one RECO leg of a chain (supercluster legs and validation): the leg's area, template and parameter block from `legs.conf` |
+| `pod_start.sh` | the same steps in a GPU pod of the NGT cluster: unpacks the area of the run, starts the probe or dump pools on CPU lanes, the mixture-PID training and the interpretation training, all inside cmssw-el8 |
 
 ## Blocks
 
