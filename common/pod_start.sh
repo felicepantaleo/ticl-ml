@@ -1,6 +1,6 @@
 #!/bin/bash
 # The steps of a retrain in a GPU pod of the NGT cluster, from a kubectl exec shell. The pod must hold a Kerberos ticket
-# for /cms-hlt-nfs (a renewer from a keytab). Each step runs detached inside cmssw-el8; logs in <RUNDIR>/<TAG>/pod/.
+# for /cms-hlt-nfs (a renewer from a keytab). Each step runs detached inside cmssw-el8; logs in <RUNDIR>/<TAG>/pod/<pod>/.
 #   area:         unpacks <RUNDIR>/area.tgz (the CMSSW area of the run) into <SCRATCH>/area, ProjectRename, plugin check
 #   pools <STEP>: one start_pool.sh STEP=probe or dumps per lane of LANES ("<first cpu>:<workers>:<cpus per worker> ...")
 #   mix:          showerShapePID/train_mix.sh (GPU)
@@ -10,7 +10,7 @@ X=$(cd "$(dirname "${BASH_SOURCE[0]}")/.." && pwd)
 W=${RUNDIR:?RUNDIR}
 T=${TAG:?TAG}
 S=${SCRATCH:?SCRATCH}
-L=$W/$T/pod
+L=$W/$T/pod/$(hostname -s)
 export KRB5CCNAME=${KRB5CCNAME:-FILE:/tmp/krb5cc_$(id -u)}
 klist -s || { echo "no Kerberos ticket"; exit 1; }
 case "$(stat -f -c %T /cms-hlt-nfs 2>/dev/null)" in nfs*) ;; *) echo "cms-hlt-nfs is not NFS"; exit 1 ;; esac
