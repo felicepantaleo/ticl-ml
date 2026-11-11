@@ -2,10 +2,11 @@
 # Mixture-PID retrain of TAG, in felice-1gpu-nvl inside cmssw-el8 --nv: waits for the probe chains of the queue (deadline
 # 6 h; stops on a failed chain), extracts ts_flat.root, trains hi (CLUEstering tracksters) and fin (final tracksters) with
 # the H9 recipe and maps them onto the CNN scale. Output <TAG>/models/mix/mixPID_{hi,fin}_<TAG>*; marker <TAG>/mix.done or mix.failed.
-# usage: TAG=rt3p2 train_mix.sh
-W=/cms-hlt-nfs/user/fpantale/ticlv6tune/rt3
+# usage: RUNDIR=<run folder> TAG=rt3p2 [TRAIN_ENV=<cmssw area with torch>] train_mix.sh
+X=$(cd "$(dirname "${BASH_SOURCE[0]}")/.." && pwd)
+W=${RUNDIR:?RUNDIR}
 D=$W/${TAG:?TAG}
-L=$W/lib/pidstudy
+L=$X/showerShapePID/pidstudy
 O=$D/models/mix
 fail() { echo "$1" > $D/mix.failed; exit 1; }
 rm -f $D/mix.done $D/mix.failed

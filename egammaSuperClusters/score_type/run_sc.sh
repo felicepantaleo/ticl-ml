@@ -3,10 +3,11 @@
 # 1,6..196 and 3,8..198; never the validation chains). Each line runs repo/ticlv6_baseline/bin/ticl_leg.sh with the leg
 # sc_<TAG> of <TAG>/sc/legs.conf. Claims by mkdir in <TAG>/sc/claims, one rc line per leg in rc.txt; stops claiming after
 # 3 failed legs. Outputs <TAG>/sc/legs/<kind>/sc_<TAG>/<chain>; marker <TAG>/sc/ALL_DONE when every line has an rc.
-# usage: TAG=rt3p2 VBF_WORK=<local work dir> run_sc.sh "<cpus> <membind>,..."
-W=/cms-hlt-nfs/user/fpantale/ticlv6tune/rt3
+# usage: RUNDIR=<run folder> TAG=rt3p2 VBF_WORK=<local work dir> run_sc.sh "<cpus> <membind>,..."
+X=$(cd "$(dirname "${BASH_SOURCE[0]}")/../.." && pwd)
+W=${RUNDIR:?RUNDIR}
 S=$W/${TAG:?TAG}/sc
-J=$W/repo/ticlv6_baseline/bin/ticl_leg.sh
+J=$X/common/ticl_leg.sh
 Q=$S/queue_sc.txt
 export VBF_BASE=$S VBF_OUT=$S/legs VBF_THREADS=${VBF_THREADS:-16} CUDA_VISIBLE_DEVICES= ROCR_VISIBLE_DEVICES= HIP_VISIBLE_DEVICES=
 : "${VBF_WORK:?VBF_WORK}"

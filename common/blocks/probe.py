@@ -33,7 +33,8 @@ process.pidOut = cms.OutputModule("PoolOutputModule", fileName=cms.untracked.str
                                          "keep ticlTracksters_ticlTracksterInterpretations__*"))
 process.pidOutPath = cms.EndPath(process.pidOut)
 process.schedule.append(process.pidOutPath)
-# The CNN PIDs at both levels (the scale onto which the new PID models are mapped); the interpretation models stay M6d.
+# The CNN PIDs at both levels (the scale onto which the new PID models are mapped); the interpretation models are the
+# defaults of the area (M6d in run rt3p2).
 process.ticlTrackstersCLUEstering.inferenceAlgo = 'TracksterInferenceByCNN'
 process.ticlTracksterInterpretations.pidInferenceAlgo = ''
 process.ticlTracksterInterpretations.pluginInferenceAlgoTracksterInferenceByPFN.doPID = 1

@@ -1,7 +1,7 @@
 #!/bin/bash
 # Installs the interpretation models of <TAG>/models/interp into the area $1 under the names of blocks/models_<TAG>.py.
-# usage: TAG=rt3p2 install_models.sh <area>
-W=/cms-hlt-nfs/user/fpantale/ticlv6tune/rt3
+# usage: RUNDIR=<run folder> TAG=rt3p2 install_models.sh <area>
+W=${RUNDIR:?RUNDIR}
 D=$W/${TAG:?TAG}
 A=${1:?area}/src/RecoTICL/Interpretation/data
 put() { cp "$1" "$2.tmp" && mv "$2.tmp" "$2" || exit 1; }

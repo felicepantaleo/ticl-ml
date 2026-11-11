@@ -1,12 +1,12 @@
 #!/bin/bash
-# M6d-recipe training of the retrain TAG of the fixed code (rt3; H9 scripts; outputs under rt3/<TAG>) in felice-1gpu-nvl
+# M6d-recipe training of the retrain TAG (H9 scripts; outputs under <RUNDIR>/<TAG>) in felice-1gpu-nvl
 # (1 H100 NVL) inside cmssw-el8 --nv on /cms-hlt-nfs, on the finished dump folders listed in CHAINDIRS (lines "<sample> <folder>").
 # PART=hyp: tables and pairs (TenTau + e/gamma), the four hypothesis seeds on the GPU, their ensemble and the species
 # model. PART=share: share tables (TenTau, QCD, high-pT QCD) and the share model. Markers <TAG>/train/<part>.done or
 # <part>.failed; both parts done: <TAG>/train/train.done.
-N=/cms-hlt-nfs/user/fpantale/hackathon_retrain
-W=/cms-hlt-nfs/user/fpantale/ticlv6tune/rt3
-S=$N/train/scripts
+X=$(cd "$(dirname "${BASH_SOURCE[0]}")/.." && pwd)
+W=${RUNDIR:?RUNDIR}
+S=$X/interpretation/hypothesis
 TAG=${TAG:?TAG}
 D=$W/$TAG
 M=$D/dumps
@@ -25,9 +25,9 @@ export CHAINDIRS
 for s in tt eg qcd qcdhi; do step "$s chains in the list: $(awk -v s=$s '$1 == s' $CHAINDIRS | wc -l)"; done
 if [ $part = share ]; then
   step "share tables"
-  M6ROOT=$M SHAREOUT=$D/train/share_tables python3 $N/train/prepare_share_m6.py > $D/train/share_tables.log 2>&1 || fail "share tables"
+  M6ROOT=$M SHAREOUT=$D/train/share_tables python3 $X/interpretation/share/prepare_share_m6.py > $D/train/share_tables.log 2>&1 || fail "share tables"
   step "share model"
-  SHARETABLES=$D/train/share_tables OMP_NUM_THREADS=16 python3 $N/train/train_share_m6.py $O/neutralShare_mlp_m6.onnx > $O/share.log 2>&1 || fail share
+  SHARETABLES=$D/train/share_tables OMP_NUM_THREADS=16 python3 $X/interpretation/share/train_share_m6.py $O/neutralShare_mlp_m6.onnx > $O/share.log 2>&1 || fail share
 else
   step "tables"
   ( DUMPROOT=$M python3 $S/prepare_c2.py tt $T/tt > $T/tt/prepare.log 2>&1 && \
@@ -53,7 +53,7 @@ else
   step "ensemble and species model"
   python3 $S/ens_export.py $T/all $O/hypothesis_mlp_m6.onnx 0 2=0.5 fc_both03g_s1 fc_both03g_s2 fc_both03g_s3 \
     fc_both03g_s4 > $O/ensemble.log 2>&1 || fail ensemble
-  CUDA_VISIBLE_DEVICES=0 python3 $N/train/train_species_m6.py $T/all $O/neutralSpecies_mlp_m6.onnx > $O/species.log 2>&1 \
+  CUDA_VISIBLE_DEVICES=0 python3 $X/interpretation/species/train_species_m6.py $T/all $O/neutralSpecies_mlp_m6.onnx > $O/species.log 2>&1 \
     || fail species
 fi
 step "done $part"

@@ -2,12 +2,13 @@
 # One training-dump job of the CLUEstering retrain (H9), job2.sh with the study block from BLOCK (default cfg/<mode>_block.py): RECO of one chain's DIGI with the cs
 # configuration (cfg/reco_v6.py) and one study block (cfg/<mode>_block.py), see bin/job.sh. The DIGI is copied to
 # WORK first, so cmsRun reads only local files (parallel reads from NFS hung the NFS client of felice-vbf-hc).
-# usage: job3.sh <probe|m6> <tt|eg|qcd|qcdhi> <chain> <cpus>; AREA, WORK, OUTROOT (default $N/<mode>new), NEV (50).
+# usage: job3.sh <probe|m6> <tt|eg|qcd|qcdhi> <chain> <cpus>; AREA, WORK, OUTROOT, BLOCK, NEV (50), DATA (root of the
+# productions, default /cms-hlt-nfs/user/fpantale).
 # Output $OUTROOT/<sample>/<chain>/{cfg.py,job.log,ntuple.root[,tracksters.root]} and done or failed.
 set -uo pipefail
 mode=$1; sample=$2; chain=$(printf "%06d" "$((10#$3))"); cpus=$4
-N=/cms-hlt-nfs/user/fpantale/hackathon_retrain
-NF=/cms-hlt-nfs/user/fpantale
+X=$(cd "$(dirname "${BASH_SOURCE[0]}")/.." && pwd)
+NF=${DATA:-/cms-hlt-nfs/user/fpantale}
 PRESET=""
 case $sample in
   tt) digi=$NF/ticlv6prod/tt/$chain/digi/step2.root
@@ -18,7 +19,7 @@ case $sample in
   *) exit 2 ;;
 esac
 case $mode in probe|m6) ;; *) exit 2 ;; esac
-OUT=${OUTROOT:-$N/${mode}new}/$sample/$chain
+OUT=${OUTROOT:?OUTROOT}/$sample/$chain
 W=${WORK:?WORK}/$mode/$sample/$chain
 [ -f "$OUT/done" ] && exit 0
 rm -rf "$OUT" "$W"; mkdir -p "$OUT" "$W" || exit 3
@@ -39,7 +40,7 @@ copy_digi && [ "$(stat -L -c %s "$digi")" = "$(stat -c %s "$W/.step2.root.tmp")"
   mv "$W/.step2.root.tmp" "$W/step2.root" || { echo "DIGI copy failed" > "$OUT/failed"; rm -rf "$W"; exit 5; }
 nthr=$(echo "$cpus" | awk -F'[-,]' '{print ($2 == "" ? 1 : $2 - $1 + 1)}')
 {
-  cat $N/cfg/reco_v6.py
+  cat $X/common/cfg/reco_v6.py
   cat <<PY
 
 # Job block: $mode $sample $chain
@@ -60,7 +61,7 @@ from PhysicsTools.TruthInfo.customiseTruthPreset import applyTruthPreset
 $PRESET
 process.TFileService = cms.Service("TFileService", fileName=cms.string("ntuple.root"))
 PY
-  cat "${BLOCK:-$N/cfg/${mode}_block.py}"
+  cat "${BLOCK:?BLOCK}"
 } > "$W/cfg.py"
 cd "${AREA:?AREA}/src" && source /cvmfs/cms.cern.ch/cmsset_default.sh && eval "$(SCRAM_IGNORE_HOOKS=1 scram runtime -sh)" || exit 3
 export CUDA_VISIBLE_DEVICES= ROCR_VISIBLE_DEVICES= HIP_VISIBLE_DEVICES=

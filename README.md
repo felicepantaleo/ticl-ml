@@ -114,23 +114,18 @@ The splits are by chain id, so all rows of one event are in one split. Each READ
 
 ## Paths
 
-The shell drivers (`*.sh`) are the scripts that ran, without changes, so they hold the paths of that run. The python
-scripts find the other scripts of this repository relative to their own path. They read the data paths from
-environment variables or arguments. To run a pipeline in another place, change the variables at the top of each
-driver. This table gives the place in this repository of each path in the drivers:
+The shell drivers (`*.sh`) find the other scripts of this repository relative to their own path. They read the
+locations of a run from environment variables:
 
-| path in the drivers | in this repository |
-|---|---|
-| `$W` = `/cms-hlt-nfs/user/fpantale/ticlv6tune/rt3`: `*.sh` | `common/`, `showerShapePID/train_mix.sh`, `interpretation/{start_train,train_m6}.sh`, `egammaSuperClusters/score_type/*.sh` |
-| `$W/lib/pidstudy` | `showerShapePID/pidstudy` |
-| `$W/sc/scripts` | `egammaSuperClusters/score_type` |
-| `$W/blocks`, `$W/harness` | `common/blocks`, `common/harness` |
-| `$W/repo/ticlv6_baseline/bin/ticl_leg.sh` | `common/ticl_leg.sh` |
-| `$N` = `/cms-hlt-nfs/user/fpantale/hackathon_retrain`: `tools/{pool3,job3}.sh`, `cfg/reco_v6.py` | `common/`, `common/cfg/reco_v6.py` |
-| `$N/train/scripts` | `interpretation/hypothesis` |
-| `$N/train/train_species_m6.py` | `interpretation/species` |
-| `$N/train/{prepare,train}_share_m6.py` | `interpretation/share` |
-| `$W/<TAG>/...` | outputs of a run (not in this repository) |
+| variable | meaning | run rt3p2 |
+|---|---|---|
+| `RUNDIR` | run folder: the generated blocks (`blocks/`), the claims and one folder `<TAG>/` per retrain with its queues, outputs and markers | `/cms-hlt-nfs/user/fpantale/ticlv6tune/rt3` |
+| `AREA` | CMSSW area of the RECO jobs (with `cmssw/` and the patch), into which the new models are installed | the area `rt3` (below) |
+| `DATA` | root of the productions c1, c2, c3 (DIGI files) | `/cms-hlt-nfs/user/fpantale` (the default) |
+| `TRAIN_ENV` | CMSSW area whose python has torch, onnx and xgboost | `/shared/fpantale/retrain_cs/CMSSW_20_1_0_pre4` (the default) |
+
+The queues of a run are in `common/queues` (probe 96, dumps 1414, supercluster legs 148). The python scripts read the
+data paths from environment variables or arguments.
 
 ## Order of a full retrain
 

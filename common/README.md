@@ -1,7 +1,8 @@
 # Common scripts of a retrain
 
-These are the scripts of run rt3p2, without changes. `job3.sh` and `rest.sh` are the versions that ran rt3p2. Later
-versions changed only the number of streams and of slots.
+These are the scripts of run rt3p2. They take the run folder, the CMSSW area and the data root from `RUNDIR`, `AREA` and
+`DATA` (see the top README). `job3.sh` and `rest.sh` are the versions that ran rt3p2. Later versions changed only the
+number of streams and of slots.
 
 ## One run
 
@@ -9,8 +10,8 @@ A run is one tune point (`POINT`) and one tag (`TAG`). Run rt3p2 is `POINT=p2 TA
 
 | script | what it does |
 |---|---|
-| `setup_tag.sh` | makes the blocks (`make_blocks.sh`), the folders of `<TAG>` and the queues: probe (96), dumps (1414), supercluster legs (148). No queue holds a validation chain. |
-| `make_blocks.sh` | writes `blocks/{probe,m6,m6s,sc_leg}_<POINT>.py`, `models_<TAG>.py` and `val_<POINT>rt.py` from `blocks/templates` and `harness/<POINT>.py` |
+| `setup_tag.sh` | makes the blocks (`make_blocks.sh`), the folders of `<TAG>` and its queues from `queues/`: probe (96), dumps (1414), supercluster legs (148). No queue holds a validation chain. |
+| `make_blocks.sh` | writes `<RUNDIR>/blocks/{probe,m6,m6s,sc_leg}_<POINT>.py`, `models_<TAG>.py` and `val_<POINT>rt.py` from the templates `blocks/*.py` and `harness/<POINT>.py` |
 | `start_pool.sh` | `STEP=probe` or `STEP=dumps`: one pool of `pool3.sh` workers on the queue of the step. `dumps` waits for the mixture PIDs and installs them in the CMSSW area. |
 | `pool3.sh` | workers that claim queue lines with an atomic `mkdir`; a `STOP` file next to the queue stops new claims |
 | `job3.sh` | one chain: copies the DIGI to local disk, writes the RECO job (`cfg/reco_v6.py`, the chain's DIGI, the truth preset of TenTau, the block), runs 50 events, writes `done` or `failed` |
@@ -31,6 +32,7 @@ python appended to the RECO job:
 | `blocks/models_rt3p2.py`, `models_sc_rt3p2.py` | the models of run rt3p2 in the job |
 
 The `_p2` blocks are the templates with the p2 parameters (`harness/p2.py`, which uses `harness/make_tune_cfg.py`).
+`harness/B.py` is the tune point B (tune v3); it changes 20 parameters of the defaults of `ticlv6-modifier` 6d6471d043b.
 
 ## Configuration templates
 

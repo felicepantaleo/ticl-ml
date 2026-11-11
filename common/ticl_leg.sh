@@ -12,13 +12,13 @@
 # environment: VBF_BASE, VBF_OUT, VBF_WORK; optional VBF_THREADS (16), VBF_EXTRA_CFG (python appended to the job)
 # and VBF_FILES (the files the job publishes, separated by spaces).
 set -uo pipefail
-REPO=$(cd "$(dirname "$0")/../.." && pwd)
+X=$(cd "$(dirname "${BASH_SOURCE[0]}")/.." && pwd)
 if [ $# -eq 2 ]; then
   kind=${1%%-*}; leg=${1#*-}; chain=$(printf "%06d" "$2")
 else
   kind=$1; chain=$(printf "%06d" "$2"); leg=$3
 fi
-N=/cms-hlt-nfs/user/fpantale
+N=${DATA:-/cms-hlt-nfs/user/fpantale}
 case $kind in
   tt) src=$N/ticlv6prod/tt/$chain/reco_v6/cfg.py; digi=$N/ticlv6prod/tt/$chain/digi/step2.root ;;
   eg) src=$N/ticlv6prod/eg/$chain/reco_v6/cfg.py; digi=$N/ticlv6prod/eg/$chain/digi/step2.root ;;
@@ -27,7 +27,7 @@ case $kind in
   *) echo "unknown kind $kind" >&2; exit 2 ;;
 esac
 read -r _ AREA TEMPLATE PARAMS <<< "$(awk -v l="$leg" '$1 == l' "${VBF_BASE:?VBF_BASE}/legs.conf")"
-[ -n "${AREA:-}" ] && [ -f "$REPO/production/cfg/$TEMPLATE" ] || { echo "leg $leg not in legs.conf" >&2; exit 2; }
+[ -n "${AREA:-}" ] && [ -f "$X/common/cfg/$TEMPLATE" ] || { echo "leg $leg not in legs.conf" >&2; exit 2; }
 [ -z "${PARAMS:-}" ] || [ -f "$PARAMS" ] || { echo "no parameter block $PARAMS" >&2; exit 2; }
 [ -f "$src" ] && [ -s "$digi" ] || { echo "no block $src or DIGI $digi" >&2; exit 4; }
 OUT=${VBF_OUT:?VBF_OUT}/$kind/$leg/$chain
@@ -42,7 +42,7 @@ code=$(cat "$AREA/code_id.txt" 2>/dev/null || echo "$AREA")
 [ -n "${PARAMS:-}" ] && code="$code params:$(md5sum < "$PARAMS" | cut -c1-12)"
 cd "$W" || exit 3
 {
-  cat "$REPO/production/cfg/$TEMPLATE"
+  cat "$X/common/cfg/$TEMPLATE"
   echo; echo "# Job block of $src (without customiseValidation, the hypothesis dump and model settings)"
   if [ "$TEMPLATE" = reco_v5.py ]; then
     sed -n '/^# Job block/,$p' "$src" | sed 's/^_v6 = True$/_v6 = False/' | sed '/^# TICLv6 only/,/+= process.hypDumper$/d'
